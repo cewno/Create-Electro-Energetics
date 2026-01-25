@@ -40,6 +40,12 @@ public class CEEItems {
                     .addMaxCurrent(() -> CEEWireTypes.COPPER.get().getMaxTemperature() / 30 + 33.33)))
             .register();
 
+    public static final ItemEntry<WireSpoolItem> COPPER_BUS_SPOOL = REGISTRATE.item("copper_bus_spool", properties -> new WireSpoolItem(properties, CEEWireTypes.COPPER_BUS))
+            .onRegister(i -> ElectricStatsTooltipModifier.ALL_ENTRIES.register(i, new ElectricStatsTooltipModifier.ElectricStatSet()
+                    .addResistancePerMeter(CEEConfigs.server().resistanceValues.wireResistance::get)
+                    .addMaxCurrent(() -> CEEWireTypes.COPPER_BUS.get().getMaxTemperature() / 30 + 33.33)))
+            .register();
+
     public static final ItemEntry<WireSpoolItem> IRON_WIRE_SPOOL = REGISTRATE.item("iron_wire_spool", properties -> new WireSpoolItem(properties, CEEWireTypes.IRON))
             .onRegister(i -> ElectricStatsTooltipModifier.ALL_ENTRIES.register(i, new ElectricStatsTooltipModifier.ElectricStatSet()
                     .addResistancePerMeter(CEEConfigs.server().resistanceValues.ironWireResistance::get)

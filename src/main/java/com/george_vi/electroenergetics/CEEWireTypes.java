@@ -24,6 +24,16 @@ public class CEEWireTypes {
             1f,
             CEEConfigs.server().maxWireLength::get));
 
+    public static final DeferredHolder<WireType, WireType> COPPER_BUS = WIRE_TYPES.register("copper_bus", () -> new WireType(
+            CEEConfigs.server().resistanceValues.wireResistance::get,
+            CEEPartialModels.COPPER_BUS_SEGMENT, Items.COPPER_INGOT::asItem,
+            CEEItems.COPPER_BUS_SPOOL::get,
+            0d,
+            () -> 0d, () -> null, () -> 14000,
+            0f,
+            CEEConfigs.server().maxWireLength::get
+    ));
+
     public static final DeferredHolder<WireType, WireType> STANDARD = WIRE_TYPES.register("standard", () -> new WireType(
             CEEConfigs.server().resistanceValues.wireResistance::get,
             CEEPartialModels.WIRE_SEGMENT,

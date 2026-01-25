@@ -227,6 +227,7 @@
   "item.electroenergetics.clamp_meter.tooltip.behaviour1": "显示通过该_线缆_的_电流大小_和_方向_。",
   "item.electroenergetics.clamp_meter.tooltip.condition1": "当对着线缆持续使用时",
   "item.electroenergetics.clamp_meter.tooltip.summary": "测量通过该_线缆_的_电流大小_和_方向_。",
+  "item.electroenergetics.copper_bus_spool": "粗铜线轴",
   "item.electroenergetics.copper_wire": "铜线",
   "item.electroenergetics.copper_wire_spool": "铜线轴",
   "item.electroenergetics.creative_wire_spool": "创造线轴",

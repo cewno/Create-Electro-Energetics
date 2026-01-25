@@ -237,6 +237,7 @@
   "item.electroenergetics.clamp_meter.tooltip.behaviour1": "Displays the _Amperage_ and _Direction_ of the _Current_ flowing through the _Wire_.",
   "item.electroenergetics.clamp_meter.tooltip.condition1": "When R-Clicked while Hovering over a Wire",
   "item.electroenergetics.clamp_meter.tooltip.summary": "Measured the _Amperage_ of the _Current_ flowing through a _Wire_.",
+  "item.electroenergetics.copper_bus_spool": "Copper Bus Spool",
   "item.electroenergetics.copper_wire": "Copper Wire",
   "item.electroenergetics.copper_wire_spool": "Copper Wire Spool",
   "item.electroenergetics.creative_wire_spool": "Creative Wire Spool",

@@ -25,6 +25,7 @@ public class CEECreativeTab {
                         output.accept(CEEItems.WIRE_SPOOL.asStack());
                         output.accept(CEEItems.HEAVILY_INSULATED_WIRE_SPOOL.asStack());
                         output.accept(CEEItems.COPPER_WIRE_SPOOL.asStack());
+                        output.accept(CEEItems.COPPER_BUS_SPOOL);
                         output.accept(CEEItems.IRON_WIRE_SPOOL.asStack());
                         output.accept(CEEItems.IRON_BUS_SPOOL.asStack());
                         output.accept(CEEItems.CREATIVE_WIRE_SPOOL.asStack());
