@@ -1,8 +1,8 @@
 package com.george_vi.electroenergetics.foundation.nodes;
 
 /**
- * Describes a node that is not attached to a block, but is a 'free' node.
- * You can create these nodes and use them for simulation.
+ * 描述一个未附着在方块上的节点，即“自由”节点。
+ * 您可以创建这些节点并将其用于仿真。
  * @see InWorldNode
  */
 public class AttachedNode extends Node {

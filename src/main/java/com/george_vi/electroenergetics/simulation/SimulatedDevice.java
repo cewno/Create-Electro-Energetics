@@ -9,10 +9,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * This is a type class for devices.
- * Devices are data structures for blocks with electric behaviour that allows them to tick, even tho they are unloaded.
- * Devices use a separate object for storing data.
- * @param <T> the data holder class type
+ * 这是一个设备的类型类。
+ * 设备是具有电力行为的方块的数据结构，即使在未加载时也能进行更新（tick）。
+ * 设备使用独立的对象来存储数据。
+ * @param <T> 数据持有者类的类型
  */
 public abstract class SimulatedDevice<T> {
     final ResourceLocation id;
@@ -25,20 +25,20 @@ public abstract class SimulatedDevice<T> {
     }
 
     /**
-     * This method called once per device before the simulation. Each device can now 'bridge' its nodes, with a resistor or a voltage source, by that nodes are internally connected.
-     * @param pos in-world position of the devices block (this position will not always be loaded, before accessing check with {@link Level#isLoaded(BlockPos position)})
-     * @param level level that the device is in
-     * @param bridges used to 'bridge' nodes or create internal nodes
-     * @param extraData saved data local to the device
+     * 此方法在每次设备仿真之前调用一次。每个设备现在可以通过电阻或电压源来“桥接”其节点，从而实现节点的内部连接。
+     * @param pos 设备方块在世界中的位置（此位置不一定总是已加载，在访问前请使用 {@link Level#isLoaded(BlockPos position)} 检查）
+     * @param level 设备所在的维度
+     * @param bridges 用于“桥接”节点或创建内部节点
+     * @param extraData 设备本地保存的数据
      */
     public void preTick(BlockPos pos, Level level, BridgeCollector bridges, T extraData) {}
 
     /**
-     * This method is called once per device after the simulation. Each device can now process the voltages, currents and show results in the world.
-     * @param pos in-world position of the devices block (this position will not always be loaded, before accessing check with {@link Level#isLoaded(BlockPos position)})
-     * @param level level that the device is in
-     * @param results a holder for the resulting voltages, also containing methods useful for calculating currents etc.
-     * @param extraData saved data local to the device
+     * 此方法在每次设备仿真之后调用一次。每个设备现在可以处理电压、电流并在世界中显示结果。
+     * @param pos 设备方块在世界中的位置（此位置不一定总是已加载，在访问前请使用 {@link Level#isLoaded(BlockPos position)} 检查）
+     * @param level 设备所在的层级
+     * @param results 用于存储结果电压的容器，还包含用于计算电流等有用方法
+     * @param extraData 设备本地保存的数据
      */
     public void postTick(BlockPos pos, Level level, SimulationResults results, T extraData) {}
 
@@ -58,7 +58,7 @@ public abstract class SimulatedDevice<T> {
     public abstract CompoundTag write(T extraData);
 
     /**
-     * Shows smoking particles around the specified pos.
+     * 在指定位置周围显示冒烟粒子效果。
      */
     protected void showOverheatingParticles(Level level, BlockPos pos) {
         if (!level.isLoaded(pos))
@@ -71,15 +71,15 @@ public abstract class SimulatedDevice<T> {
 
 
     /**
-     * When heat > 0, the temperature rises, until it settles into a value. That value depends on the heat value.
-     * This is the formula for the value, the temperature settles into, where h - heat
-     * max(0,30 * (h - 3.3))
-     * This is similar to the temperature mentioned in WireType, but the values are different.
-     * Temperature here isn't based on just the current, but power (for instance heat loss calculated using the P=I²R formula).
+     * 当热量 > 0 时，温度会上升，直到稳定在一个值。该值取决于热量值。
+     * 这是温度稳定值的计算公式，其中 h 表示热量：
+     * max(0, 30 * (h - 3.3))
+     * 这与 WireType 中提到的温度类似，但数值不同。
+     * 此处的温度不仅基于电流，还基于功率（例如使用 P=I²R 公式计算的热损耗）。
      *
-     * @param temp temp value in abstract units
-     * @param heat heat (energy loss) in Watts
-     * @return new temp value in abstract units
+     * @param temp 温度值（抽象单位）
+     * @param heat 热量（能量损耗，单位为瓦特）
+     * @return 新的温度值（抽象单位）
      */
     protected float updateTemp(float temp, float heat) {
         if (Float.isNaN(temp))

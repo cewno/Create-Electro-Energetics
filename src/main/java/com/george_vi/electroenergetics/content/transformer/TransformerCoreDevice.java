@@ -33,13 +33,19 @@ public class TransformerCoreDevice extends SimulatedDevice<TransformerCoreDevice
     public void preTick(BlockPos pos, Level level, BridgeCollector bridges, DataHolder extraData) {
         Direction facing = extraData.facing;
         if (facing.getAxisDirection() == Direction.AxisDirection.NEGATIVE)
-            return; // the block with positive facing is the controller
+            return; // 朝向为正方向的方块是控制器
 
         double ratio = extraData.ratio;
         if (ratio == 0)
             ratio = 1;
         BlockPos otherPos = pos.relative(facing);
-        InWorldNode[] nodes = new InWorldNode[] {new InWorldNode(0, pos), new InWorldNode(1, pos), new InWorldNode(0, otherPos), new InWorldNode(1, otherPos), new InWorldNode(2, pos), new InWorldNode(3, pos)};
+        InWorldNode[] nodes = new InWorldNode[] {
+                new InWorldNode(0, pos),
+                new InWorldNode(1, pos),
+                new InWorldNode(0, otherPos),
+                new InWorldNode(1, otherPos),
+                new InWorldNode(2, pos),
+                new InWorldNode(3, pos)};
 
         TransformerBehaviour.preTick(nodes, ratio, pos, bridges, extraData.transformerData);
 
@@ -49,10 +55,16 @@ public class TransformerCoreDevice extends SimulatedDevice<TransformerCoreDevice
     public void postTick(BlockPos pos, Level level, SimulationResults results, DataHolder extraData) {
         Direction facing = extraData.facing;
         if (facing.getAxisDirection() == Direction.AxisDirection.NEGATIVE)
-            return; // the block with positive facing is the controller
+            return; // 朝向为正方向的方块是控制器
 
         BlockPos otherPos = pos.relative(facing);
-        InWorldNode[] nodes = new InWorldNode[] {new InWorldNode(0, pos), new InWorldNode(1, pos), new InWorldNode(0, otherPos), new InWorldNode(1, otherPos), new InWorldNode(2, pos), new InWorldNode(3, pos)};
+        InWorldNode[] nodes = new InWorldNode[] {
+                new InWorldNode(0, pos),
+                new InWorldNode(1, pos),
+                new InWorldNode(0, otherPos),
+                new InWorldNode(1, otherPos),
+                new InWorldNode(2, pos),
+                new InWorldNode(3, pos)};
 
         double power = TransformerBehaviour.postTick(nodes, results, extraData.transformerData);
 
@@ -78,6 +90,7 @@ public class TransformerCoreDevice extends SimulatedDevice<TransformerCoreDevice
         if (!CEEConfigs.server().componentDamage.get())
             return;
 
+        // 超过最高温度处理
         if (extraData.temp > 31_000) {
             if (level.isLoaded(pos)) {
                 CatnipServices.NETWORK.sendToClientsAround((ServerLevel) level, pos.getCenter(), 40, new SendSparkPacket(pos.getCenter(), SendSparkPacket.SparkSize.BIG));

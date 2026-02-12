@@ -12,19 +12,29 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import java.util.*;
 
 public class Network {
+    /// 存储所有包装后的索引节点集合，用于表示电路中的各个节点。
     final Set<WrappedIndexedNode> allNodes;
+    /// 电路构建器，负责构建和管理电路结构。
     final CircuitBuilder builder;
+    /// 基础设施保存的数据，可能包含电路的持久化信息。
     final InfrastructureSavedData sd;
     // For performance, instead of Couple<Integer>. A single long can hold 2 ints.
     // First -> First 4 bytes >> 32
     // Last -> Last 4 bytes
+    /// 使用 Long2DoubleMap 存储电压源信息，键为编码后的节点对（long 类型），值为电压值。
     final Long2DoubleMap voltageSources = new Long2DoubleOpenHashMap();
+    /// 使用 Long2DoubleMap 存储电流源信息，键为编码后的节点对（long 类型），值为电流值。
     final Long2DoubleMap currentSources = new Long2DoubleOpenHashMap();
+    /// 使用 Long2ObjectMap 存储微 ticked 的电气属性信息，键为编码后的节点对，值为电气属性对象。
     final Long2ObjectMap<ElectricalProperties> microTicked = new Long2ObjectOpenHashMap<>();
+    /// 使用嵌套的 Int2ObjectMap 存储邻接关系覆盖信息，外层键为节点索引，内层键为目标节点索引，值为电气属性。
     Int2ObjectMap<Int2ObjectMap<ElectricalProperties>> adjacencyOverrides = new Int2ObjectOpenHashMap<>();
+    /// 存储仿真节点数组，用于电路仿真过程中的节点信息管理。
     SimulationNode[] simulationNodes;
+    /// 稀疏矩阵形式的电导矩阵，用于电路方程求解。
     public SparseMatrix conductanceMatrix;
 //    public double[][] conductanceMatrix;
+    /// 右手向量，用于线性方程组求解。
     public double[] rhsVector;
 
     public Network(Set<WrappedIndexedNode> allNodes, CircuitBuilder builder, InfrastructureSavedData sd) {

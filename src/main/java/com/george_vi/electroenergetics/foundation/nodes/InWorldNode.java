@@ -17,8 +17,8 @@ import java.util.*;
 import java.util.stream.IntStream;
 
 /**
- * Describes a node that is attached to a block.
- * Each {@link InWorldNode} is identified by an ID and a block position. IDs are local to the block position.
+ * 描述一个附着在方块上的节点。
+ * 每个 {@link InWorldNode} 由一个 ID 和方块位置标识。ID 是相对于方块位置的局部标识。
  * @see AttachedNode
  */
 public class InWorldNode extends Node implements Comparable<InWorldNode> {

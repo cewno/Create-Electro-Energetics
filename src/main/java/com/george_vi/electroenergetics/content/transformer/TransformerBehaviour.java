@@ -85,16 +85,27 @@ public class TransformerBehaviour {
     }
 
     public static class TransformerBehaviourDataHolder {
+        /// 初级线圈电压的平均值
         public double averagePrimaryVoltage;
+        /// 次级线圈电压的平均值
         public double averageSecondaryVoltage;
+        /// 上一次测量的初级线圈电压值
         public double lastPrimaryVoltage;
+        /// 上一次测量的次级线圈电压值
         public double lastSecondaryVoltage;
+        /// 表示电压方向是否为反向的布尔标志
         public boolean backwards;
+        /// 用于计算平均值的滑动窗口大小（固定值）
         public final int averageWindowSize;
+        /// 存储最近初级线圈电压测量值的数组
         public double[] lastPrimaryVoltages;
+        /// 存储最近次级线圈电压测量值的数组
         public double[] lastSecondaryVoltages;
+        /// 当前在滑动窗口中的指针位置
         public int averagePointer;
+        /// 输入功率或馈电值
         public double feed;
+        /// 负载功率或用电值
         public double load;
 
         public TransformerBehaviourDataHolder() {

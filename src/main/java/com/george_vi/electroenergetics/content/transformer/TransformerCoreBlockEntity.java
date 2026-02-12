@@ -49,16 +49,28 @@ public class TransformerCoreBlockEntity extends SmartBlockEntity implements IHav
         setLazyTickRate(20);
     }
 
+    /// 线圈匝数
     protected ScrollValueBehaviour turns;
+    /// 当前功率
     protected double power;
+    /// 上一次发送的功率值
     protected double lastSentPower = -1;
+    ///
     protected double heatDissipationFactor = 0;
+    /// 初级线圈电压
     protected double primaryVoltage;
+    /// 次级线圈电压
     protected double secondaryVoltage;
 
+
+    /// 音频
     @OnlyIn(Dist.CLIENT)
     protected ElectricHumSoundInstance soundInstance;
 
+    /**
+     * 添加行为
+     * @param behaviours 行为列表
+     */
     @Override
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
         turns = new ScrollValueBehaviour(CEELang.translate("transformer.turns").component(), this, new ValueBox()) {
@@ -73,6 +85,7 @@ public class TransformerCoreBlockEntity extends SmartBlockEntity implements IHav
         turns.withCallback(i -> this.updateTurns());
         behaviours.add(turns);
     }
+
 
     @Override
     public void tick() {
@@ -95,7 +108,10 @@ public class TransformerCoreBlockEntity extends SmartBlockEntity implements IHav
             return;
         lastSentPower = power;
 
+        // 获取设备实例管理器
         InfrastructureSavedData sd = InfrastructureSavedData.load((ServerLevel) level);
+
+        // 获取设备实例
         SimulatedDeviceInstance<?> deviceInstance = sd.getDevice(worldPosition);
         if (deviceInstance == null || (!(deviceInstance.extraData() instanceof TransformerCoreDevice.DataHolder dataHolder))) {
             sendData();
@@ -122,6 +138,12 @@ public class TransformerCoreBlockEntity extends SmartBlockEntity implements IHav
         sendData();
     }
 
+    /**
+     * 使用深度优先搜索（DFS）遍历散热器相关的方块位置。
+     *
+     * @param visited 已访问过的方块位置集合，用于避免重复访问。
+     * @param currentPos 当前方块的位置。
+     */
     private void heatDissipatorsDFS(Set<BlockPos> visited, BlockPos currentPos) {
         boolean waterlogged = !level.getFluidState(currentPos).isEmpty();
         for (Direction direction : Iterate.directions) {
@@ -161,6 +183,13 @@ public class TransformerCoreBlockEntity extends SmartBlockEntity implements IHav
 
     }
 
+    /**
+     * 将信息添加到 工程师护目镜 栏中。
+     *
+     * @param tooltip 用于存储工具提示信息的列表
+     * @param isPlayerSneaking 玩家是否处于潜行状态
+     * @return 是否成功将信息添加
+     */
     @Override
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
         Direction facing = getBlockState().getValue(TransformerCoreBlock.FACING);
@@ -217,6 +246,10 @@ public class TransformerCoreBlockEntity extends SmartBlockEntity implements IHav
         return true;
     }
 
+
+    /**
+     * 更新线圈匝数
+     */
     private void updateTurns() {
         if (!(level instanceof ServerLevel sl))
             return;

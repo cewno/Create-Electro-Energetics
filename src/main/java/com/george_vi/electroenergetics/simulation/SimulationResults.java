@@ -22,6 +22,16 @@ public class SimulationResults {
     final int microTickBits;
 
 
+    /**
+     * 构造函数，用于初始化SimulationResults对象。
+     *
+     * @param voltages         电压数组，表示电路中各节点的电压值。
+     * @param microTicks       微ticks数，用于模拟时间步长的细分。
+     * @param microTickBits    微tick位数，用于表示微ticks的精度。
+     * @param sourceAmps       源电流映射，存储方向性节点连接及其对应的电流值。
+     * @param circuitBuilder   电路构建器，用于构建和管理电路结构。
+     * @param sd               基础设施保存数据，包含电路的基础设施相关信息。
+     */
     public SimulationResults(double[] voltages, int microTicks, int microTickBits, Object2DoubleMap<DirectionalNodeConnection> sourceAmps, CircuitBuilder circuitBuilder, InfrastructureSavedData sd) {
         this.voltages = voltages;
         this.sourceAmps = sourceAmps;
@@ -35,6 +45,11 @@ public class SimulationResults {
         return sd;
     }
 
+
+    /** 获取接线端子电压
+     * @param node 接线端子
+     * @return 电压
+     */
     public double getVoltageAt(Node node) {
         int nodeID = circuitBuilder.nodeIndexes.getInt(node);
         if (nodeID == -1)
@@ -51,6 +66,11 @@ public class SimulationResults {
         return rms;
     }
 
+    /** 获取接线端子电压
+     * @param pos 设备位置
+     * @param id 接线端子ID
+     * @return 电压
+     */
     public double getVoltageAt(BlockPos pos, int id) {
         return getVoltageAt(new InWorldNode(id, pos));
     }
@@ -119,7 +139,17 @@ public class SimulationResults {
         return getVoltageAt(new InWorldNode(n1, pos), new InWorldNode(n2, pos));
     }
 
+    /**
+     * 计算两个节点之间的电压。
+     *
+     * @param n1 第一个节点对象
+     * @param n2 第二个节点对象
+     * @return 返回两个节点之间的电压值。如果任一节点未找到，则返回0；
+     *         如果启用了微时间片（microTickBits > 0），则返回均方根电压值；
+     *         否则返回瞬时电压差值。
+     */
     public double getVoltageAt(Node n1, Node n2) {
+        // 获取两个节点在电路中的索引
         int nodeId1 = circuitBuilder.nodeIndexes.getInt(n1);
         int nodeId2 = circuitBuilder.nodeIndexes.getInt(n2);
         if (nodeId1 == -1 || nodeId2 == -1)
