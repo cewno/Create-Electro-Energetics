@@ -118,6 +118,7 @@
   "electroenergetics.capacitor.micro_capacitance_symbol": "🔋",
   "electroenergetics.capacitor.milli_capacitance_symbol": "🔋 x1000",
   "electroenergetics.capacitor.nano_capacitance_symbol": "🔋 ÷1000",
+
   "electroenergetics.clamp_meter.current": "Current:",
   "electroenergetics.converter.kilo_voltage_symbol": "⚡ x1000",
   "electroenergetics.converter.voltage": "Generated Voltage in Volts",
