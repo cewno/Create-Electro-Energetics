@@ -39,9 +39,10 @@ public class CircuitBuilder {
         }
     }
 
-    public CircuitBuilder(int id, List<WrappedIndexedNode> allLazyIndexedNodes, Object2IntOpenHashMap<Node> lazyIndexedNodeIndexes) {
+    public CircuitBuilder(int id, List<WrappedIndexedNode> allLazyIndexedNodes, Object2IntMap<Node> lazyIndexedNodeIndexes) {
         allIndexedNodes = new ArrayList<>(allLazyIndexedNodes);
-        nodeIndexes = lazyIndexedNodeIndexes.clone();
+        lazyIndexedNodeIndexes.clear();
+        nodeIndexes = lazyIndexedNodeIndexes;
         nodeIndexes.defaultReturnValue(-1);
         defaultZeroPotentials = new Int2IntOpenHashMap();
 

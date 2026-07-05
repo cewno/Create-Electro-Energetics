@@ -8,8 +8,7 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntStack;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectDoublePair;
+import it.unimi.dsi.fastutil.objects.*;
 import net.minecraft.core.SectionPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
@@ -35,7 +34,7 @@ public class WireSimulationState {
     private boolean reloadLazy = true;
 
     private List<WrappedIndexedNode> allLazyIndexedNodes = new ArrayList<>();
-    private Object2IntOpenHashMap<Node> lazyIndexedNodeIndexes = new Object2IntOpenHashMap<>();
+    private Object2IntMap<Node> lazyIndexedNodeIndexes = new Object2IntRBTreeMap<>();
     private int id = 0;
 
     public boolean rebuild = true;
@@ -72,7 +71,7 @@ public class WireSimulationState {
     public void onNodeChange(Collection<InWorldNode> nodes) {
         id = 0;
         allLazyIndexedNodes = new ArrayList<>(nodes.size() * 2);
-        lazyIndexedNodeIndexes = new Object2IntOpenHashMap<>(nodes.size() * 2);
+        lazyIndexedNodeIndexes = new Object2IntRBTreeMap<>();
         lazyIndexedNodeIndexes.defaultReturnValue(-1);
         for (Node node : nodes) {
             WrappedIndexedNode indexedNode = new WrappedIndexedNode(node, id);
