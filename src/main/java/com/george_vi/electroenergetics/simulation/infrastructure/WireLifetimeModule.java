@@ -4,12 +4,14 @@ import com.george_vi.electroenergetics.config.CEEConfigs;
 import com.george_vi.electroenergetics.content.wire.SendPositionedWireParticlesPacket;
 import com.george_vi.electroenergetics.content.wire.SendWireParticlesPacket;
 import com.george_vi.electroenergetics.foundation.nodes.AttachedNode;
+import com.george_vi.electroenergetics.foundation.nodes.InWorldNode;
 import com.george_vi.electroenergetics.foundation.nodes.InWorldNodeConnection;
 import com.george_vi.electroenergetics.foundation.nodes.Node;
 import com.george_vi.electroenergetics.simulation.SimulationResults;
 import com.george_vi.electroenergetics.simulation.WireType;
 import net.createmod.catnip.math.VecHelper;
 import net.createmod.catnip.platform.CatnipServices;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.phys.Vec3;
@@ -44,12 +46,14 @@ public class WireLifetimeModule {
 
             double current = 0;
             double wholeWireResistance = connectionData.resistance * connectionData.wireData.length;
+            InWorldNode node1 = connection.node1();
+            InWorldNode node2 = connection.node2();
             if (cuts == null || cuts.isEmpty()) {
-                double vd = connectionData.getVoltageOnWire(results, connection.node1(), connection.node2());
+                double vd = connectionData.getVoltageOnWire(results, node1, node2);
                 current = vd / wholeWireResistance;
             } else {
                 float prevPoint = 0;
-                Node prevNode = connection.node1();
+                Node prevNode = node1;
                 for (WireSimulationState.CutWireEntry cut : cuts) {
                     float point = cut.point();
                     if (point - prevPoint < 0.01)
@@ -70,27 +74,29 @@ public class WireLifetimeModule {
             connectionData.wireData.temperature = newTemp;
             boolean increase = newTemp > temp;
 
-            if (newTemp > wireType.getMaxTemperature() * 0.85 && level.isLoaded(connection.node1().sourcePos())) {
+            BlockPos nodePos1 = node1.sourcePos();
+            if (newTemp > wireType.getMaxTemperature() * 0.85 && level.isLoaded(nodePos1)) {
                 // Smoke particles
 
-                Vec3 wireCenter = VecHelper.lerp(0.5f, connection.node1().sourcePos().getCenter(), connection.node2().sourcePos().getCenter());
+                BlockPos nodePos2 = node2.sourcePos();
+                Vec3 wireCenter = VecHelper.lerp(0.5f, nodePos1.getCenter(), nodePos2.getCenter());
                 if (connectionData.isCatenary) {
-                    Vec3 pos1 = connection.node1().sourcePos().getBottomCenter();
-                    Vec3 pos2 = connection.node2().sourcePos().getBottomCenter();
+                    Vec3 pos1 = nodePos1.getBottomCenter();
+                    Vec3 pos2 = nodePos2.getBottomCenter();
                     CatnipServices.NETWORK.sendToClientsAround(level, wireCenter,
-                            connection.node1().sourcePos().getCenter().distanceTo(connection.node2().sourcePos().getCenter()) + 20, new SendPositionedWireParticlesPacket(pos1, pos2, ParticleTypes.SMOKE, 0f, 0.2f));
+                            nodePos1.getCenter().distanceTo(nodePos2.getCenter()) + 20, new SendPositionedWireParticlesPacket(pos1, pos2, ParticleTypes.SMOKE, 0f, 0.2f));
                     Vec3 topPos1 = pos1.add(0, 1.5, 0);
                     Vec3 topPos2 = pos2.add(0, 1.5, 0);
                     float distance = (float) topPos1.distanceTo(topPos2);
                     CatnipServices.NETWORK.sendToClientsAround(level, wireCenter,
-                            connection.node1().sourcePos().getCenter().distanceTo(connection.node2().sourcePos().getCenter()) + 20, new SendPositionedWireParticlesPacket(topPos1, topPos2, ParticleTypes.SMOKE, 350f * (0.05f / distance), 0.2f));
+                            nodePos1.getCenter().distanceTo(nodePos2.getCenter()) + 20, new SendPositionedWireParticlesPacket(topPos1, topPos2, ParticleTypes.SMOKE, 350f * (0.05f / distance), 0.2f));
                 } else {
-                    Vec3 pos1 = sd.getNodePosition(connection.node1());
-                    Vec3 pos2 = sd.getNodePosition(connection.node2());
+                    Vec3 pos1 = sd.getNodePosition(node1);
+                    Vec3 pos2 = sd.getNodePosition(node2);
                     if (pos1 != null && pos2 != null) {
                         double distance = pos1.distanceTo(pos2);
                         CatnipServices.NETWORK.sendToClientsAround(level, wireCenter,
-                                distance + 20, new SendWireParticlesPacket(connection.node1(), connection.node2(), ParticleTypes.SMOKE, connectionData.wireData.getSag(distance), 0.2f));
+                                distance + 20, new SendWireParticlesPacket(node1, node2, ParticleTypes.SMOKE, connectionData.wireData.getSag(distance), 0.2f));
                     }
                 }
             }
