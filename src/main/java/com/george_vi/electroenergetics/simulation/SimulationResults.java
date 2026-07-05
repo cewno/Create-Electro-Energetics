@@ -20,6 +20,7 @@ public class SimulationResults {
     public CircuitBuilder circuitBuilder;
     InfrastructureSavedData sd;
     final int microTicks;
+    final int invMicroTicks;
 
     public SimulationResults(double[] voltages, int microTicks, Object2DoubleMap<DirectionalNodeConnection> sourceAmps, CircuitBuilder circuitBuilder, InfrastructureSavedData sd) {
         this.voltages = voltages;
@@ -27,6 +28,7 @@ public class SimulationResults {
         this.circuitBuilder = circuitBuilder;
         this.sd = sd;
         this.microTicks = microTicks;
+        invMicroTicks = 1 / microTicks;
 
         if (microTicks == 1) {
             rmsVoltages = voltages;
@@ -180,24 +182,38 @@ public class SimulationResults {
         return getVoltageAtSqr(nodeId1, nodeId2);
     }
 
-    public double getVoltageAtSqr(int nodeId1, int nodeId2) {
+    public double getVoltageAtSqr(final int nodeId1, final int nodeId2) {
         if (nodeId1 < 0 || nodeId2 < 0)
             return 0;
-        int id1 = nodeId1 * microTicks;
-        int id2 = nodeId2 * microTicks;
-        if (microTicks == 1) {
-            double v = voltages[id1] - voltages[id2];
-            return v * v;
+
+        final int n = microTicks;
+        final int id1 = nodeId1 * n;
+        final int id2 = nodeId2 * n;
+        final double[] v = voltages;
+
+        if (n == 1) {
+            final double d = v[id1] - v[id2];
+            return d * d;
         }
 
-        double rms = 0;
-        for (int j = 0; j < microTicks; j++) {
-            double v1 = voltages[id1 + j];
-            double v2 = voltages[id2 + j];
-            rms += (v1 - v2) * (v1 - v2);
+        double s0 = 0, s1 = 0, s2 = 0, s3 = 0;
+        int j = 0;
+        final int limit = n - 3;
+
+        for (; j < limit; j += 4) {
+            final int a = id1 + j;
+            final int b = id2 + j;
+            s0 += (v[a]     - v[b])     * (v[a]     - v[b]);
+            s1 += (v[a + 1] - v[b + 1]) * (v[a + 1] - v[b + 1]);
+            s2 += (v[a + 2] - v[b + 2]) * (v[a + 2] - v[b + 2]);
+            s3 += (v[a + 3] - v[b + 3]) * (v[a + 3] - v[b + 3]);
         }
-        rms /= microTicks;
-        return rms;
+        for (; j < n; j++) {
+            final double d = v[id1 + j] - v[id2 + j];
+            s0 += d * d;
+        }
+
+        return (s0 + s1 + s2 + s3) * invMicroTicks;
     }
 
     public double[] getVoltages(Node n1) {
@@ -229,11 +245,14 @@ public class SimulationResults {
      * @return -1 if the node doesn't exist.
      */
     public int getNodeID(Node node, int hint) {
-        List<WrappedIndexedNode> allIndexedNodes = circuitBuilder.allIndexedNodes;
-        if (hint >= 0 && hint < allIndexedNodes.size()) {
-            WrappedIndexedNode wn = allIndexedNodes.get(hint);
-            return hint;
+        if (0 <= hint){
+            List<WrappedIndexedNode> allIndexedNodes = circuitBuilder.allIndexedNodes;
+            if (hint < allIndexedNodes.size()) {
+                //WrappedIndexedNode wn = allIndexedNodes.get(hint);
+                return hint;
+            }
         }
+
         return circuitBuilder.nodeIndexes.getInt(node);
     }
 }
