@@ -11,7 +11,7 @@
   "advancement.electroenergetics.fuse_bypass.desc": "使用保险丝旁路\n§7（隐藏成就）",
   "advancement.electroenergetics.fuse_streak": "坚持测试",
   "advancement.electroenergetics.fuse_streak.desc": "当保险丝烧断后，依次更换新的保险丝。\n§7（隐藏成就）",
-  "advancement.electroenergetics.root": "机械动力：电气工程",
+  "advancement.electroenergetics.root": "机械动力：电力学",
   "advancement.electroenergetics.root.desc": "欢迎来到电力世界",
   "advancement.electroenergetics.short_circuit": "注册电工",
   "advancement.electroenergetics.short_circuit.desc": "连接一个短路\n§7（隐藏成就）",
@@ -50,6 +50,7 @@
   "block.electroenergetics.double_connector": "双重接线端子",
   "block.electroenergetics.double_switch": "双闸刀开关",
   "block.electroenergetics.duplex_wire_termination": "双绞线接头",
+  "block.electroenergetics.electric_fan": "电风扇",
   "block.electroenergetics.electric_pump": "电动泵",
   "block.electroenergetics.electric_shock_sign": "触电警示牌",
   "block.electroenergetics.electrical_panel": "电气面板",
@@ -522,5 +523,5 @@
   "item.electroenergetics.wire_damper": "线缆阻尼器",
   "item.electroenergetics.wire_damper.tooltip.summary": "只是一个装饰性的_线缆附件_",
   "item.electroenergetics.wire_spool": "绝缘线轴",
-  "itemGroup.electroenergetics": "机械动力：电气工程"
+  "itemGroup.electroenergetics": "机械动力：电力学"
 }
